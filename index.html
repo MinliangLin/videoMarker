@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+   <title>Video.js Markers Example</title>
+   <style>
+      .myInput {
+          margin: 20px;
+      }
+   </style>
+   <link href="http://vjs.zencdn.net/4.3/video-js.css" rel="stylesheet">
+   <link href="./videojs.markers.css" rel="stylesheet">
+</head>
+<body>
+  <div class="myInput">
+    <label> Video: </label>
+    <input type=url id="vUrl" placeholder="https://example.com/video.mp4" size="80"></input>
+    <!--<input type=file id="vFile"></input>-->
+  </div>
+
+  <div class="myInput">
+    <label> Shots: </label>
+    <input type=url id="tUrl" placeholder="https://example.com/shot.txt" size="80"></input>
+    <!--<input type=file id="tFile"></input>-->
+  </div>
+
+  <div class="myInput">
+    <label> FPS: </label>
+    <input type=text id="fps" value="1/25"></input>
+    <button onclick="myReload()">reload</button>
+  </div>
+
+  <video id="test_video" controls preload="none" class="video-js vjs-default-skin" width="960" height="396">
+    <source src="" type="video/mp4">
+  </video>
+
+</body>
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="http://vjs.zencdn.net/4.3/video.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/videojs-markers/0.7.0/videojs-markers.js'></script>
+<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+
+<script>
+   // initialize video.js
+   var player = videojs('test_video');
+   function myReload() {
+       const fps = eval($("#fps")[0].value);
+       player.src($("#vUrl")[0].value);
+       player.load()
+       fetch($("#tUrl")[0].value).then(r => r.text()).then(t => {
+           var marks = t.split("\n").map(s=>(
+             {time: s*fps, text: s*fps})
+           )//.filter(d => d.time < player.duration());
+           player.markers({markers: marks});
+       });
+   }
+</script>
+</html>
