@@ -25,11 +25,11 @@
 
   <div class="myInput">
     <label> FPS: </label>
-    <input type=text id="fps" value="1/25"></input>
+    <input type=text id="fps" value="25"></input>
     <button onclick="myReload()">reload</button>
   </div>
 
-  <video id="test_video" controls preload="none" class="video-js vjs-default-skin" width="960" height="396">
+  <video id="test_video" controls preload="none" class="video-js vjs-default-skin" width="1280" height="720">
     <source src="" type="video/mp4">
   </video>
 
@@ -37,21 +37,28 @@
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="http://vjs.zencdn.net/4.3/video.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/videojs-markers/0.7.0/videojs-markers.js'></script>
-<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
 
 <script>
-   // initialize video.js
-   var player = videojs('test_video');
-   function myReload() {
-       const fps = eval($("#fps")[0].value);
-       player.src($("#vUrl")[0].value);
-       player.load()
-       fetch($("#tUrl")[0].value).then(r => r.text()).then(t => {
-           var marks = t.split("\n").map(s=>(
-             {time: s*fps, text: s*fps})
-           )//.filter(d => d.time < player.duration());
-           player.markers({markers: marks});
-       });
-   }
+    var player = videojs('test_video');
+    function myReload() {
+        const fps = $("#fps")[0].value;
+        player.src($("#vUrl")[0].value);
+        fetch($("#tUrl")[0].value).then(
+            r => r.text()
+        ).then(
+            t => {
+                if (typeof player.markers !== 'function') {
+                    player.markers.destroy();
+                }
+                var m = t.split("\n").map(
+                    s => ({time: s.split(" ")[0]/fps, text: s})
+                );//.filter(d => d.time < player.duration());
+                player.markers({
+                    markerStyle: {'width': '3px'},
+                    markers: m
+                });
+            }
+        );
+    }
 </script>
 </html>
