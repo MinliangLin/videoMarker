@@ -20,22 +20,25 @@
   <div class="myInput">
     <label> Shots: </label>
     <input type=url id="tUrl" placeholder="https://example.com/shot.txt" size="80"></input>
-    <!--<input type=file id="tFile"></input>-->
   </div>
 
   <div class="myInput">
     <label> FPS: </label>
     <input type=text id="fps" value="25"></input>
     <button onclick="myReload()">reload</button>
+    <button onclick="prevBreak()">prev</button>
+    <button onclick="nextBreak()">next</button>
+    <button onclick="prevFrame()">prevFrm</button>
+    <button onclick="nextFrame()">nextFrm</button>
   </div>
 
-  <video id="test_video" controls preload="none" class="video-js vjs-default-skin" width="1280" height="720">
+  <video id="test_video" controls preload="auto" class="video-js vjs-default-skin" width="1280" height="720">
     <source src="" type="video/mp4">
   </video>
 
 </body>
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="http://vjs.zencdn.net/4.3/video.js"></script>
+<script src="http://vjs.zencdn.net/4.9/video.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/videojs-markers/0.7.0/videojs-markers.js'></script>
 
 <script>
@@ -51,7 +54,7 @@
                     player.markers.destroy();
                 }
                 var m = t.split("\n").map(
-                    s => ({time: s.split(" ")[0]/fps, text: s})
+                    s => ({time: s.split(/\s/)[0]/fps, text: s})
                 );//.filter(d => d.time < player.duration());
                 player.markers({
                     markerStyle: {'width': '3px'},
@@ -59,6 +62,24 @@
                 });
             }
         );
+    }
+    function prevBreak() {
+        player.pause();
+        player.markers.prev();
+    }
+    function nextBreak() {
+        player.pause();
+        player.markers.next();
+    }
+    function prevFrame() {
+        player.pause();
+        var cur = player.currentTime();
+        player.currentTime(cur-1/25);
+    }
+    function nextFrame() {
+        player.pause();
+        var cur = player.currentTime();
+        player.currentTime(cur+1/25);
     }
 </script>
 </html>
