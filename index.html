@@ -53,7 +53,7 @@
                 if (typeof player.markers !== 'function') {
                     player.markers.destroy();
                 }
-                var m = t.split("\n").map(
+                var m = t.split("\n").filter(s=>s !== "").map(
                     s => ({time: s.split(/\s/)[0]/fps, text: s})
                 );//.filter(d => d.time < player.duration());
                 player.markers({
