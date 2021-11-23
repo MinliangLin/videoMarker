@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head></head>
+<body>
+  <video id="test_video" controls preload="auto" width="640" height="360">
+    <source id="test" src="" type="video/mp4">
+  </video>
+  <button onclick="myload()">Load</button>
+</body>
+<script>
+function myload() {
+  document.getElementById('test').src = "http://192.168.10.122/exp/minliang-share/video/large/mov9_540p/Aravindhante.mov";
+  document.getElementById('test_video').load();
+}
+</script>
+</html>
